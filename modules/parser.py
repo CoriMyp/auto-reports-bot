@@ -71,8 +71,12 @@ class Parser:
             # line 4
             employees = [
                 employee.strip()
-                for employee in lines[3].split(',')
+                for employee in lines[3].split(',') if employee.strip() != ''
             ]
+            
+            for employee in employees:
+                if execute(f"SELECT id FROM employees WHERE name='{employee}'") is None:
+                    raise Exception(f"Can't find employee '{employee}'")
 
             # last line
             marks = [
