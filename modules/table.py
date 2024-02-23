@@ -108,10 +108,11 @@ class Table:
 				res=False
 			)
 		):
-			group_id = int(info[0].split(':')[0])
+			group = await bot.get_chat(int(info[0].split(':')[0]))
+			group_id = group.id
 
 			if not str(group_id).startswith('-100'):
-				group_id = int('-100' + str(abs(int(group_id))))
+				group_id = '@' + group.username
 
 			mpage[f'A{mrow}'].value = info[1]
 			mpage[f'B{mrow}'].value = info[2]
