@@ -108,7 +108,7 @@ class Parser:
 				raise Exception("Неправильно написано время")
 
 		except IndexError:
-			raise Exception("Отчёт неправильный (или не отчёт во все)")
+			return Exception("Отчёт неправильный (или не отчёт во все)")
 
 		except Exception as e:
 			return e
