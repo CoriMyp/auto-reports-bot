@@ -92,7 +92,7 @@ class Parser:
 					await bot.get_chat_member(
 						msg.chat.id, user_id
 					)
-				except TelegramBadRequest:
+				except TelegramBadRequest as e:
 					raise Exception(f"Сотрудника '{employee}' нету в '{partner}'")
 
 			# last line
