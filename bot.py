@@ -145,7 +145,6 @@ def error_handler(name, exception, traceback):
 
 @dp.errors()
 async def errors_handler(error: types.ErrorEvent):
-	print(error.model_dump_json())
 	await logger.system(str(error.exception))
 
 

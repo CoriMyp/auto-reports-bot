@@ -113,16 +113,13 @@ class Table:
 
 			print(group.title, group.type, group.id)
 
-			try:
-				member = (await bot.get_chat_member(
-					chat_id=group_id,
-					user_id=execute(
-						"SELECT id FROM employees "
-						f"WHERE name='{info[9].split(',')[0]}'"
-					)
-				))
-			except TelegramMigrateToChat as e:
-				print("Migrated:", e.migrate_to_chat_id)
+			member = (await bot.get_chat_member(
+				chat_id=group_id,
+				user_id=execute(
+					"SELECT id FROM employees "
+					f"WHERE name='{info[9].split(',')[0]}'"
+				)
+			))
 
 			mpage[f'A{mrow}'].value = info[1]
 			mpage[f'B{mrow}'].value = info[2]
