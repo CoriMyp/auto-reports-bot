@@ -108,19 +108,6 @@ class Table:
 				res=False
 			)
 		):
-			group = await bot.get_chat(int(info[0].split(':')[0]))
-			group_id = group.id
-
-			print(group.title, group.type, group.id, '|', info[3])
-
-			member = (await bot.get_chat_member(
-				chat_id=group_id,
-				user_id=execute(
-					"SELECT id FROM employees "
-					f"WHERE name='{info[9].split(',')[0]}'"
-				)
-			))
-
 			mpage[f'A{mrow}'].value = info[1]
 			mpage[f'B{mrow}'].value = info[2]
 			mpage[f'C{mrow}'].value = info[3]
@@ -151,7 +138,15 @@ class Table:
 				bpage[f'C{brow}'].value = info[4]
 				bpage[f'D{brow}'].value = info[5]
 				bpage[f'E{brow}'].value = info[6]
-				bpage[f'F{brow}'].value = member.user.username
+				bpage[f'F{brow}'].value = (
+					(await bot.get_chat_member(
+						chat_id=int(info[0].split(':')[0]),
+						user_id=execute(
+							"SELECT id FROM employees "
+							f"WHERE name='{info[9].split(',')[0]}'"
+						)
+					)).user.username
+				)
 				bpage[f'G{brow}'].value = float(info[10])
 				bpage[f'H{brow}'].value = (
 					float(info[13]) if info[13] != '' else ""
@@ -163,13 +158,6 @@ class Table:
 
 			if info[2] == "Основной":
 				for i, employee in enumerate(info[9].split(',')):
-					member = (await bot.get_chat_member(
-						chat_id=group_id,
-						user_id=execute(
-							"SELECT id FROM employees "
-							f"WHERE name='{employee}'"
-						)
-					))
 					mpage[f'A{mrow}'].value = info[1]
 					mpage[f'B{mrow}'].value = "Подотчет"
 					mpage[f'C{mrow}'].value = info[3]
@@ -199,7 +187,15 @@ class Table:
 					bpage[f'C{brow}'].value = info[4]
 					bpage[f'D{brow}'].value = info[5]
 					bpage[f'E{brow}'].value = info[6]
-					bpage[f'F{brow}'].value = member.user.username
+					bpage[f'F{brow}'].value = (
+						(await bot.get_chat_member(
+							chat_id=int(info[0].split(':')[0]),
+							user_id=execute(
+								"SELECT id FROM employees "
+								f"WHERE name='{employee}'"
+							)
+						)).user.username
+					)
 					bpage[f'G{brow}'].value = (
 						"{:.2f}".format(
 							float(info[10]) / info[8]

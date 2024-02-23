@@ -86,7 +86,7 @@ class Parser:
 				partner = execute(f"SELECT name FROM partners WHERE id={msg.chat.id}")
 
 				if user_id is None:
-					raise Exception(f"Нету сотрудника: '{employee}'")
+					raise Exception(f"Сотрудника '{employee}' не существует")
  
 				try:
 					await bot.get_chat_member(
