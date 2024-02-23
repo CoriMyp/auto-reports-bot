@@ -153,9 +153,12 @@ class Table:
                 bpage[f'I{brow}'].value = info[14]
 
                 brow += 1
+            
+            print("Partner:", info[3])
 
             if info[2] == "Основной":
                 for i, employee in enumerate(info[9].split(',')):
+                    print("Employee:", employee)
                     mpage[f'A{mrow}'].value = info[1]
                     mpage[f'B{mrow}'].value = "Подотчет"
                     mpage[f'C{mrow}'].value = info[3]

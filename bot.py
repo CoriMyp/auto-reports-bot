@@ -67,7 +67,7 @@ async def msg_handler(msg: types.Message):
 	if not execute(f"SELECT id FROM partners WHERE id={msg.chat.id}"):
 		return
 
-	parsed = parser.parse(msg)
+	parsed = await parser.parse(msg)
 
 	if isinstance(parsed, Exception):
 		await logger.incorrect(msg, parsed)
@@ -84,7 +84,7 @@ async def edited_handler(msg: types.Message):
 	if not execute(f"SELECT id FROM partners WHERE id={msg.chat.id}"):
 		return
 
-	parsed = parser.parse(msg)
+	parsed = await parser.parse(msg)
 
 	if isinstance(parsed, Exception):
 		await logger.incorrect(msg, parsed)
@@ -110,7 +110,7 @@ async def add_report_handler(msg: types.Message):
 	if not msg.reply_to_message:
 		return
 
-	parsed = parser.parse(msg.reply_to_message)
+	parsed = await parser.parse(msg.reply_to_message)
 
 	if isinstance(parsed, Exception):
 		await logger.incorrect(msg.reply_to_message, parsed)
