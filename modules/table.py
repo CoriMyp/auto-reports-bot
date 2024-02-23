@@ -111,7 +111,7 @@ class Table:
 			group = await bot.get_chat(int(info[0].split(':')[0]))
 			group_id = group.id
 
-			print(group.title, group.type, group.id)
+			print(group.title, group.type, group.id, '|', info[3])
 
 			member = (await bot.get_chat_member(
 				chat_id=group_id,
