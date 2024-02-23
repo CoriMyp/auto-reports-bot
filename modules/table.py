@@ -108,9 +108,10 @@ class Table:
 				res=False
 			)
 		):
-			print("partner", info[0].split(':')[0])
-			group = await bot.get_chat(int(info[0].split(':')[0]))
-			print(group.id, group.is_forum)
+			group_id = int(info[0].split(':')[0])
+
+			if not str(group_id).startswith('-100'):
+				group_id = int('-100' + str(abs(int(group_id))))
 
 			mpage[f'A{mrow}'].value = info[1]
 			mpage[f'B{mrow}'].value = info[2]
@@ -144,7 +145,7 @@ class Table:
 				bpage[f'E{brow}'].value = info[6]
 				bpage[f'F{brow}'].value = (
 					(await bot.get_chat_member(
-						chat_id=group.id,
+						chat_id=group_id,
 						user_id=execute(
 							"SELECT id FROM employees "
 							f"WHERE name='{info[9].split(',')[0]}'"
@@ -193,7 +194,7 @@ class Table:
 					bpage[f'E{brow}'].value = info[6]
 					bpage[f'F{brow}'].value = (
 						(await bot.get_chat_member(
-							chat_id=group.id,
+							chat_id=group_id,
 							user_id=execute(
 								"SELECT id FROM employees "
 								f"WHERE name='{employee}'"
