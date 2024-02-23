@@ -1,5 +1,5 @@
 import openpyxl as xl
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramMigrateToChat
 
 from datetime import datetime as dt
 from typing import List
@@ -111,7 +111,15 @@ class Table:
 			group = await bot.get_chat(int(info[0].split(':')[0]))
 			group_id = group.id
 
-			print(group.title, group.type, group.id, int(info[0].split(':')[0]))
+			member = lambda name: await bot.get_chat_member(
+				chat_id=group_id,
+				user_id=execute(
+					"SELECT id FROM employees "
+					f"WHERE name='{name}'"
+				)
+			)
+
+			print(group.title, group.type, group.id)
 
 			mpage[f'A{mrow}'].value = info[1]
 			mpage[f'B{mrow}'].value = info[2]
@@ -143,15 +151,11 @@ class Table:
 				bpage[f'C{brow}'].value = info[4]
 				bpage[f'D{brow}'].value = info[5]
 				bpage[f'E{brow}'].value = info[6]
-				bpage[f'F{brow}'].value = (
-					(await bot.get_chat_member(
-						chat_id=group_id,
-						user_id=execute(
-							"SELECT id FROM employees "
-							f"WHERE name='{info[9].split(',')[0]}'"
-						)
-					)).user.username
-				)
+				try:
+					bpage[f'F{brow}'].value = member(info[9].split(',')[0]).user.username
+				except TelegramMigrateToChat as e:
+					print("Migrated:", e.migrate_to_chat_id)
+
 				bpage[f'G{brow}'].value = float(info[10])
 				bpage[f'H{brow}'].value = (
 					float(info[13]) if info[13] != '' else ""
@@ -192,15 +196,7 @@ class Table:
 					bpage[f'C{brow}'].value = info[4]
 					bpage[f'D{brow}'].value = info[5]
 					bpage[f'E{brow}'].value = info[6]
-					bpage[f'F{brow}'].value = (
-						(await bot.get_chat_member(
-							chat_id=group_id,
-							user_id=execute(
-								"SELECT id FROM employees "
-								f"WHERE name='{employee}'"
-							)
-						)).user.username
-					)
+					bpage[f'F{brow}'].value = member(employee).user.username
 					bpage[f'G{brow}'].value = (
 						"{:.2f}".format(
 							float(info[10]) / info[8]
