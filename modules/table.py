@@ -111,7 +111,7 @@ class Table:
 			group = await bot.get_chat(int(info[0].split(':')[0]))
 			group_id = group.id
 
-			print(group.title, group.is_forum, group.type)
+			print(group.title, group.type, group.id, int(info[0].split(':')[0]))
 
 			mpage[f'A{mrow}'].value = info[1]
 			mpage[f'B{mrow}'].value = info[2]
