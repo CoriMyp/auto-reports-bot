@@ -45,9 +45,9 @@ async def add_employee(msg: Message):
     elif len(info) == 2:
         if execute(f"SELECT id FROM employees WHERE name='{info[1]}'"):
             execute(f"DELETE FROM employees WHERE name='{info[1]}'")
-            logger.success(msg, f"Deleted employee '{info[1]}' - OK!")
+            await logger.success(msg, f"Deleted employee '{info[1]}' - OK!")
 
     elif len(info) == 3:
         if not execute(f"SELECT id FROM employees WHERE id={int(info[2])}"):
             execute(f"INSERT INTO employees VALUES({info[2]}, '{info[1]}')")
-            logger.success(msg, f"Added employee '{info[1]}' - OK!")
+            await logger.success(msg, f"Added employee '{info[1]}' - OK!")
