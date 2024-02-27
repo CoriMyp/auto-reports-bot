@@ -43,6 +43,7 @@ class Result:
 
 		self.error = 'Да' if 'x3' in data['marks'] else 'Нет'
 		self.overkill = 'Да' if 'x5' in data['marks'] else 'Нет'
+		self.to_delete = '!' in data['marks']
 
 
 class Parser:

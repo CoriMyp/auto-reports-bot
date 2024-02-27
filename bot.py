@@ -89,6 +89,11 @@ async def edited_handler(msg: types.Message):
 	if isinstance(parsed, Exception):
 		await logger.incorrect(msg, parsed)
 		return
+	
+	if parsed.to_delete:
+		table.delete(parsed.rep_id)
+		await logger.success(msg, "Deleted - OK!")
+		return
 
 	if table.exist(parsed.rep_id):
 		table.update(parsed)
@@ -123,20 +128,6 @@ async def add_report_handler(msg: types.Message):
 
 	table.add(parsed)
 	await logger.success(msg.reply_to_message, "Created - OK!")
-
-
-@dp.message(F.text == '/del', F.chat.type.contains('group'))
-async def del_report(msg: types.Message):
-	if msg.from_user.id not in config.ALLOWED:
-		return
-
-	if not msg.reply_to_message:
-		return
-
-	report = msg.reply_to_message
-
-	table.delete(f"{report.chat.id}:{report.message_id}")
-	await logger.success(report, "Deleted - OK!")
 
 
 def error_handler(name, exception, traceback):
