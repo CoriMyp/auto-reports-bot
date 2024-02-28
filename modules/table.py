@@ -1,14 +1,16 @@
 import openpyxl as xl
-from aiogram.exceptions import TelegramMigrateToChat
 
-from datetime import datetime as dt
 from typing import List
 
 import os
 import shutil
 
 from modules.parser import Result
+from modules.logs import Logger
 from config import execute, bot
+
+
+logger = Logger()
 
 
 class Table:
@@ -213,6 +215,7 @@ class Table:
 			
 			except Exception:
 				mrow, brow = temp_rows
+				await logger.incorrect(None, "Неправильный отчёт", info)
 				continue
 
 		main_table.save("tables/main_table.xlsx")

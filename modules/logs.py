@@ -58,16 +58,32 @@ class Logger:
             )
         )
 
-    async def incorrect(self, msg: Message, text: str):
-        await msg.react([Reaction(emoji="👎")])
-        partner = execute(f"SELECT name FROM partners WHERE id={msg.chat.id}")
+    async def incorrect(self, msg: Optional[Message], text: str, report: Optional[list] = None):
+        if not report:
+            await msg.react([Reaction(emoji="👎")])
+
+        partner = execute(
+            f"SELECT name FROM partners WHERE id={msg.chat.id}"
+            if not report else (
+                f"SELECT name FROM partners WHERE id={int(report[0].split(':')[0])}"
+            )
+        )
+
+        if report:
+            report = (
+                f"{report[4]} {report[6]}\n"
+                f"{report[5]} {report[10]} {report[11]}\n"
+                f"{report[12]}\n"
+                f"{report[9]}\n"
+                "..."
+            )
 
         await bot.send_message(
             chat_id=self.id,
             text=(
                 f"Incorrect report from `{partner}`\n"
                 "```\n"
-                f"{msg.caption}"
+                f"{msg.caption if not report else report}"
                 "\n```\n"
                 "Error\n"
                 "```\n"
@@ -81,7 +97,7 @@ class Logger:
             text=(
                 f"Incorrect report from `{partner}`\n"
                 "```\n"
-                f"{msg.caption}"
+                f"{msg.caption if not report else report}"
                 "\n```\n"
                 "Error\n"
                 "```\n"
