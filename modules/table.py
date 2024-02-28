@@ -100,88 +100,40 @@ class Table:
 
 		# gather main table
 		mrow, brow = 2, 2
+		temp_rows = []
 
-		for i, info in enumerate(
-			execute(
-				f"SELECT * FROM reports WHERE {' AND '.join(filters)}"
-				if filters[0] != 'all' else "SELECT * FROM reports",
-				res=False
-			)
+		for info in execute(
+			f"SELECT * FROM reports WHERE {' AND '.join(filters)}"
+			if filters[0] != 'all' else "SELECT * FROM reports",
+			res=False
 		):
-			mpage[f'A{mrow}'].value = info[1]
-			mpage[f'B{mrow}'].value = info[2]
-			mpage[f'C{mrow}'].value = info[3]
-			mpage[f'D{mrow}'].value = info[4]
-			mpage[f'E{mrow}'].value = info[5]
-			mpage[f'F{mrow}'].value = info[6]
-			mpage[f'G{mrow}'].value = info[7]
-			mpage[f'H{mrow}'].value = int(info[8])
-			mpage[f'I{mrow}'].value = float(info[11])
-			mpage[f'J{mrow}'].value = info[9].split(',')[0]
-			mpage[f'K{mrow}'].value = "{:.2f}".format(float(info[10]))
-			mpage[f'L{mrow}'].value = (
-				"{:.2f}".format(float(info[12]))
-				if info[12] != '' else ""
-			)
-			mpage[f'M{mrow}'].value = (
-				"{:.2f}".format(float(info[13]))
-				if info[13] != '' else ""
-			)
-			mpage[f'N{mrow}'].value = info[14]
-			mpage[f'O{mrow}'].value = info[15]
-
-			mrow += 1
-
-			if info[2] == 'Обычный':
-				bpage[f'A{brow}'].value = info[1]
-				bpage[f'B{brow}'].value = info[3]
-				bpage[f'C{brow}'].value = info[4]
-				bpage[f'D{brow}'].value = info[5]
-				bpage[f'E{brow}'].value = info[6]
-				bpage[f'F{brow}'].value = (
-					(await bot.get_chat_member(
-						chat_id=int(info[0].split(':')[0]),
-						user_id=execute(
-							"SELECT id FROM employees "
-							f"WHERE name='{info[9].split(',')[0]}'"
-						)
-					)).user.username
+			temp_rows = [mrow, brow]
+			try:
+				mpage[f'A{mrow}'].value = info[1]
+				mpage[f'B{mrow}'].value = info[2]
+				mpage[f'C{mrow}'].value = info[3]
+				mpage[f'D{mrow}'].value = info[4]
+				mpage[f'E{mrow}'].value = info[5]
+				mpage[f'F{mrow}'].value = info[6]
+				mpage[f'G{mrow}'].value = info[7]
+				mpage[f'H{mrow}'].value = int(info[8])
+				mpage[f'I{mrow}'].value = float(info[11])
+				mpage[f'J{mrow}'].value = info[9].split(',')[0]
+				mpage[f'K{mrow}'].value = "{:.2f}".format(float(info[10]))
+				mpage[f'L{mrow}'].value = (
+					"{:.2f}".format(float(info[12]))
+					if info[12] != '' else ""
 				)
-				bpage[f'G{brow}'].value = float(info[10])
-				bpage[f'H{brow}'].value = (
-					float(info[13]) if info[13] != '' else ""
+				mpage[f'M{mrow}'].value = (
+					"{:.2f}".format(float(info[13]))
+					if info[13] != '' else ""
 				)
-				bpage[f'I{brow}'].value = info[14]
+				mpage[f'N{mrow}'].value = info[14]
+				mpage[f'O{mrow}'].value = info[15]
 
-				brow += 1
+				mrow += 1
 
-
-			if info[2] == "Основной":
-				for i, employee in enumerate(info[9].split(',')):
-					mpage[f'A{mrow}'].value = info[1]
-					mpage[f'B{mrow}'].value = "Подотчет"
-					mpage[f'C{mrow}'].value = info[3]
-					mpage[f'D{mrow}'].value = info[4]
-					mpage[f'E{mrow}'].value = info[5]
-					mpage[f'F{mrow}'].value = info[6]
-					mpage[f'G{mrow}'].value = info[7]
-					mpage[f'H{mrow}'].value = 1
-					mpage[f'I{mrow}'].value = float(info[11])
-					mpage[f'J{mrow}'].value = employee
-					mpage[f'K{mrow}'].value = (
-						"{:.2f}".format(float(info[10]) / info[8])
-					)
-					mpage[f'L{mrow}'].value = (
-						"{:.2f}".format(float(info[12]) / info[8])
-						if info[12] != '' else ""
-					)
-					mpage[f'M{mrow}'].value = (
-						"{:.2f}".format(float(info[13]) / info[8])
-						if info[13] != '' else ""
-					)
-					mpage[f'N{mrow}'].value = info[14]
-					mpage[f'O{mrow}'].value = info[15]
-
+				if info[2] == 'Обычный':
 					bpage[f'A{brow}'].value = info[1]
 					bpage[f'B{brow}'].value = info[3]
 					bpage[f'C{brow}'].value = info[4]
@@ -192,23 +144,76 @@ class Table:
 							chat_id=int(info[0].split(':')[0]),
 							user_id=execute(
 								"SELECT id FROM employees "
-								f"WHERE name='{employee}'"
+								f"WHERE name='{info[9].split(',')[0]}'"
 							)
 						)).user.username
 					)
-					bpage[f'G{brow}'].value = (
-						"{:.2f}".format(
-							float(info[10]) / info[8]
-						)
-					)
+					bpage[f'G{brow}'].value = float(info[10])
 					bpage[f'H{brow}'].value = (
-						"{:.2f}".format(float(info[13]) / info[8])
-						if info[13] != '' else ""
+						float(info[13]) if info[13] != '' else ""
 					)
 					bpage[f'I{brow}'].value = info[14]
 
-					mrow += 1
 					brow += 1
+
+
+				if info[2] == "Основной":
+					for employee in info[9].split(','):
+						mpage[f'A{mrow}'].value = info[1]
+						mpage[f'B{mrow}'].value = "Подотчет"
+						mpage[f'C{mrow}'].value = info[3]
+						mpage[f'D{mrow}'].value = info[4]
+						mpage[f'E{mrow}'].value = info[5]
+						mpage[f'F{mrow}'].value = info[6]
+						mpage[f'G{mrow}'].value = info[7]
+						mpage[f'H{mrow}'].value = 1
+						mpage[f'I{mrow}'].value = float(info[11])
+						mpage[f'J{mrow}'].value = employee
+						mpage[f'K{mrow}'].value = (
+							"{:.2f}".format(float(info[10]) / info[8])
+						)
+						mpage[f'L{mrow}'].value = (
+							"{:.2f}".format(float(info[12]) / info[8])
+							if info[12] != '' else ""
+						)
+						mpage[f'M{mrow}'].value = (
+							"{:.2f}".format(float(info[13]) / info[8])
+							if info[13] != '' else ""
+						)
+						mpage[f'N{mrow}'].value = info[14]
+						mpage[f'O{mrow}'].value = info[15]
+
+						bpage[f'A{brow}'].value = info[1]
+						bpage[f'B{brow}'].value = info[3]
+						bpage[f'C{brow}'].value = info[4]
+						bpage[f'D{brow}'].value = info[5]
+						bpage[f'E{brow}'].value = info[6]
+						bpage[f'F{brow}'].value = (
+							(await bot.get_chat_member(
+								chat_id=int(info[0].split(':')[0]),
+								user_id=execute(
+									"SELECT id FROM employees "
+									f"WHERE name='{employee}'"
+								)
+							)).user.username
+						)
+						bpage[f'G{brow}'].value = (
+							"{:.2f}".format(
+								float(info[10]) / info[8]
+							)
+						)
+						bpage[f'H{brow}'].value = (
+							"{:.2f}".format(float(info[13]) / info[8])
+							if info[13] != '' else ""
+						)
+						bpage[f'I{brow}'].value = info[14]
+
+						mrow += 1
+						brow += 1
+			
+			except Exception:
+				mrow, brow = temp_rows
+				continue
 
 		main_table.save("tables/main_table.xlsx")
 		bot_table.save("tables/bot_table.xlsx")
