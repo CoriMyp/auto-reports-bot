@@ -155,6 +155,7 @@ class Table:
 						float(info[13]) if info[13] != '' else ""
 					)
 					bpage[f'I{brow}'].value = info[14]
+					bpage[f'J{brow}'].value = execute(f"SELECT id FROM employees WHERE name='{info[9].split(',')[0]}'")
 
 					brow += 1
 
@@ -209,6 +210,7 @@ class Table:
 							if info[13] != '' else ""
 						)
 						bpage[f'I{brow}'].value = info[14]
+						bpage[f'J{brow}'].value = execute(f"SELECT id FROM employees WHERE name='{employee}'")
 
 						mrow += 1
 						brow += 1
